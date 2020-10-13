@@ -11,11 +11,11 @@ namespace naivebayes {
     }
 
     const size_t Image::getLength() const {
-        return length;
+        return image_pixels_.size();
     }
 
     const size_t Image::getWidth() const {
-        return width;
+        return image_pixels_[0].size();
     }
 
     void Image::setAssignedClass(char assignedClass) {
@@ -26,8 +26,9 @@ namespace naivebayes {
     }
 
     Image::Image(const std::vector<std::vector<Pixel>> &kImagePixels, const char kAssignedClass, const size_t length,
-                 const size_t width) : image_pixels_(kImagePixels), assigned_class_(kAssignedClass), length(length),
-                                       width(width) {
+                 const size_t width) : image_pixels_(kImagePixels), assigned_class_(kAssignedClass) {
+        width_ = width;
+        length_ = length;
     }
 
     void Image::AddPixel(char &c) {

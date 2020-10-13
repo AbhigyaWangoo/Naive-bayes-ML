@@ -12,6 +12,9 @@ namespace naivebayes {
     static const char kBlack = '#';
     static const char kGrey = '+';
 
+    static size_t length_ = 28;
+    static size_t width_ = 28;
+
     class Image {
 
     public:
@@ -37,9 +40,6 @@ namespace naivebayes {
     private:
         std::vector<std::vector<Pixel>> image_pixels_ = {{}}; // 2d vector of pixels
         char assigned_class_;
-
-        const size_t length = 28;
-        const size_t width = 28;
     };
 
 }  // namespace naivebayes
