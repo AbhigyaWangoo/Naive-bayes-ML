@@ -73,6 +73,8 @@ namespace naivebayes {
         double CalculateShadedProbabilityOfAllPixels(const Image &image) const;
 
         double CalculateProbabilityPixelIsShaded(const size_t &x, const size_t &y, const char &classification, const double &lapace_k) const;
+
+        void AddToFile(std::ofstream ofstream, ImageModel &model);
     };
 
 }

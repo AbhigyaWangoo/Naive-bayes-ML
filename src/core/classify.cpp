@@ -4,8 +4,7 @@
 #include "core/classify.h"
 
 namespace naivebayes {
-    int main (int argc, char * argv[]) {
-
+    int main(int argc, char *argv[]) {
         return 0;
     }
 
@@ -15,9 +14,8 @@ namespace naivebayes {
         double pixels_shade_probability;
 
         for (char c: naivebayes::kClassifications) {
-            // P(class = c | AllPixelValues)
-            current_class_probability = CalculatePriorProbabilityOfClass(c); // P(class = 0)
-            pixels_shade_probability = CalculateShadedProbabilityOfAllPixels(image); // P(ALLPIXELVALUES | class = c)
+            current_class_probability = CalculatePriorProbabilityOfClass(c);
+            pixels_shade_probability = CalculateShadedProbabilityOfAllPixels(image);
 
             classifications.emplace(c, current_class_probability * pixels_shade_probability);
         }
@@ -32,7 +30,7 @@ namespace naivebayes {
         for (size_t i = 0; i < image.getKImagePixels().size(); i++) {
             for (size_t j = 0; j < image.getKImagePixels()[i].size(); j++) {
                 current_probability = CalculateProbabilityPixelIsShaded(i, j, image.getKAssignedClass(),
-                                                                        .02); // P(i,j = 1 | class = c)
+                                                                        .02);
 
                 image_pixel_probabilities.emplace(image.getKImagePixels()[i][j].getKPixelValue(), current_probability);
             }
@@ -41,18 +39,11 @@ namespace naivebayes {
         return image_pixel_probabilities;
     }
 
-    // initialize kImages with this if the provided file with trained images is empty
-    /**
-     * Initializes the trained model if it hasn't already
-     *
-     * @param images to extract data from and then write to file
-     * @param saved_model_file to specify trained model file
-     */
     void Classify::InitModel(const std::vector<Image> images, const std::string &saved_model_file) {
         std::ifstream ifs;
 
         ifs.open(saved_model_file);
-        if(ifs.eof()) {
+        if (ifs.eof()) {
             ifs.close();
 
             std::ofstream ofs;
@@ -61,26 +52,22 @@ namespace naivebayes {
             std::map<char, double> pixel_probabilities;
 
             size_t i = 0;
-            for(Image image : images){
+            for (Image image : images) {
                 class_probabilities = FindClassProbabilities(image);
                 pixel_probabilities = FindPixelShadeProbabilities(image);
 
-                // TODO
-                //trained_model_[i].setClassProbabilities(class_probabilities);
-                //trained_model_[i].setPixelProbabilities(pixel_probabilities); // Adds values to trained_model_
+                trained_model_[i].setClassProbabilities(class_probabilities);
+                trained_model_[i].setPixelProbabilities(pixel_probabilities);
 
-                //AddToFile(ofs, trained_model_[i]);
+                AddToFile(ofs, trained_model_[i]);
                 i++;
-
-                // write images to file
             }
         } else {
 
         }
     }
 
-    //TODO assums fist value is number for classifications
-    std::ifstream& operator>> (std::ifstream &ifs, Classify &classify) {
+    std::ifstream &operator>>(std::ifstream &ifs, Classify &classify) {
         char c;
         size_t image_index = 0;
         size_t image_characters_read = 0;
@@ -88,12 +75,14 @@ namespace naivebayes {
         std::vector<Pixel> current_row = {};
         bool is_image_file = true;
 
+
         while (ifs.get(c) && !ifs.eof()) {
-            if(std::count(kClassifications.begin(), kClassifications.end(), c)) {
+            if (std::count(kClassifications.begin(), kClassifications.end(), c)) {
                 is_image_file = false;
                 classify.images_[image_index].setAssignedClass(c);
                 image_index++;
-            } else if((c == naivebayes::kBlack || c == naivebayes::kBlank || c == naivebayes::kGrey || c == '\n') && is_image_file) {
+            } else if ((c == naivebayes::kBlack || c == naivebayes::kBlank || c == naivebayes::kGrey || c == '\n') &&
+                       is_image_file) {
 
                 if (c == '\n') {
                     current_image.AddPixel(current_row);
@@ -114,12 +103,10 @@ namespace naivebayes {
 
             } else if (c == '\n') {
                 continue;
-            }
-            else {
-                throw std::runtime_error("File was empty or of incorrect type");
+            } else {
+                throw std::runtime_error("incorrect type");
             }
         }
-
         return ifs;
     }
 
@@ -175,5 +162,9 @@ namespace naivebayes {
 
     const std::vector<Image> &Classify::getTrainedImages() const {
         return images_;
+    }
+
+    void Classify::AddToFile(std::ofstream ofstream, ImageModel &model) {
+
     }
 }

@@ -15,6 +15,9 @@ namespace naivebayes {
     static size_t length_ = 28;
     static size_t width_ = 28;
 
+    /**
+     * Class holding representation of Image
+     */
     class Image {
 
     public:
@@ -31,15 +34,23 @@ namespace naivebayes {
 
         const size_t getWidth() const;
 
-        void AddPixel(char &c);
+        /**
+         * Adds row of Pixels to current image_pixels_
+         *
+         * @param row to add
+         */
+        void AddPixel(std::vector<Pixel> &row);
 
         void setAssignedClass(char assignedClass);
 
+        /**
+         * clears entire image
+         */
         void ClearImage();
 
     private:
-        std::vector<std::vector<Pixel>> image_pixels_ = {{}}; // 2d vector of pixels
-        char assigned_class_;
+        std::vector<std::vector<Pixel>> image_pixels_; // 2d vector of pixels
+        char assigned_class_ = ' ';
     };
 
 }  // namespace naivebayes

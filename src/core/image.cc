@@ -1,5 +1,4 @@
 #include <core/image.h>
-#include <iostream>
 
 namespace naivebayes {
     const char &Image::getKAssignedClass() const {
@@ -11,11 +10,11 @@ namespace naivebayes {
     }
 
     const size_t Image::getLength() const {
-        return image_pixels_.size();
+        return length_;
     }
 
     const size_t Image::getWidth() const {
-        return image_pixels_[0].size();
+        return width_;
     }
 
     void Image::setAssignedClass(char assignedClass) {
@@ -31,9 +30,8 @@ namespace naivebayes {
         length_ = length;
     }
 
-    void Image::AddPixel(char &c) {
-        Pixel pixel = Pixel(c);
-        image_pixels_[image_pixels_.size()].push_back(pixel); // TODO definately not working
+    void Image::AddPixel(std::vector<Pixel> &row) {
+        image_pixels_.push_back(row);
     }
 
     void Image::ClearImage() {

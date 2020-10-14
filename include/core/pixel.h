@@ -6,18 +6,31 @@
 #define NAIVE_BAYES_PIXEL_H
 
 namespace naivebayes {
+    /**
+     * Pixel class represents a single pixel in an image
+     */
     class Pixel {
     private:
         const char kPixelValue = ' ';
 
     public:
+        /**
+         * Constructor for initializing pixel with value
+         *
+         * @param pixelValue to initialize kPixelValue with
+         */
         Pixel(const char &pixelValue);
 
-        bool IsShaded() const;
+        Pixel();
 
         const char getKPixelValue() const;
 
-        Pixel();
+        /**
+         * Determines whether the pixel's shade based on the value
+         *
+         * @return whether the pixel is shaded or not
+         */
+        bool IsShaded() const;
     };
 }
 

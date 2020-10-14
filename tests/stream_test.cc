@@ -5,7 +5,6 @@
 
 TEST_CASE("Data stream functionality") {
     naivebayes::Classify classify;
-    //std::ifstream test_classifications ("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/testclassifications", std::istream::in);
 
     std::ifstream test_images;
     test_images.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/mnistdatatraining/trainingimages");
@@ -16,20 +15,53 @@ TEST_CASE("Data stream functionality") {
     test_images >> classify;
     test_classes >> classify;
 
+
+    std::string first_image = "                            \n"
+                              "                            \n"
+                              "                            \n"
+                              "                            \n"
+                              "                            \n"
+                              "                +++++##+    \n"
+                              "        +++++######+###+    \n"
+                              "       +##########+++++     \n"
+                              "        #######+##          \n"
+                              "        +++###  ++          \n"
+                              "           +#+              \n"
+                              "           +#+              \n"
+                              "            +#+             \n"
+                              "            +##++           \n"
+                              "             +###++         \n"
+                              "              ++##++        \n"
+                              "                +##+        \n"
+                              "                 ###+       \n"
+                              "              +++###        \n"
+                              "            ++#####+        \n"
+                              "          ++######+         \n"
+                              "        ++######+           \n"
+                              "       +######+             \n"
+                              "    ++######+               \n"
+                              "    +####++                 \n"
+                              "                            \n"
+                              "                            \n"
+                              "                            ";
     SECTION("Training Images have been loaded") {
         REQUIRE(classify.getTrainedImages().size() == 5000);
     }
 
     SECTION("Training Classes have been loaded") {
-        REQUIRE(true); // TODO implement
+        REQUIRE(classify.getTrainedImages()[0].getKAssignedClass() == '5');
     }
 
     SECTION("Training Classes and Images match") {
-        REQUIRE(true); // Todo implement
+        std::vector<char> first_ten_values = {5, 0, 4, 1, 9, 2, 1, 3, 1, 4};
+        for(size_t i = 0; i < 10;i++ ) {
+            if(first_ten_values[i] != classify.getTrainedImages()[i].getKAssignedClass()){
+                REQUIRE_FALSE(true);
+            }
+        }
     }
 
     std::ifstream test_file;
-
     test_file.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/emptyfile");
     SECTION("File loaded was empty") {
         REQUIRE_THROWS_AS(test_file >> classify, std::runtime_error);
@@ -54,12 +86,14 @@ TEST_CASE("Data stream functionality") {
         test_file.close();
     }
 
-    SECTION("Too many labels for the given image list") { // TODO implement
+    test_file.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/toomanylabels");
+    SECTION("Too many labels for the given image list") {
         REQUIRE_THROWS_AS(test_file >> classify, std::runtime_error);
         test_file.close();
     }
 
-    SECTION("Too few labels for the given image list") { // TODO implement
+    test_file.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/toofewlabels");
+    SECTION("Too few labels for the given image list") {
         REQUIRE_THROWS_AS(test_file >> classify, std::runtime_error);
         test_file.close();
     }
