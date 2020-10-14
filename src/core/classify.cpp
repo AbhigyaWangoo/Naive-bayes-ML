@@ -1,18 +1,17 @@
 //
 // Created by Abhigya Wangoo on 10/11/20.
 //
-
 #include "core/classify.h"
 
-#include <iostream>
-#include <fstream>
-#include <unordered_map>
-
 namespace naivebayes {
+    int main (int argc, char * argv[]) {
 
-    std::unordered_map<char, double> Classify::FindClassProbabilities(const Image &image) const {
-        std::unordered_map<char, double> classifications;
-        size_t current_class_probability;
+        return 0;
+    }
+
+    std::map<char, double> Classify::FindClassProbabilities(const Image &image) const {
+        std::map<char, double> classifications;
+        double current_class_probability;
         double pixels_shade_probability;
 
         for (char c: naivebayes::kClassifications) {
@@ -42,7 +41,7 @@ namespace naivebayes {
         return image_pixel_probabilities;
     }
 
-    // initialize kImages with this if the provided file with trained images is empty, otherwise call below 2
+    // initialize kImages with this if the provided file with trained images is empty
     /**
      * Initializes the trained model if it hasn't already
      *
@@ -58,51 +57,67 @@ namespace naivebayes {
 
             std::ofstream ofs;
             ofs.open(saved_model_file);
-            std::unordered_map<char, double> class_probabilities;
+            std::map<char, double> class_probabilities;
             std::map<char, double> pixel_probabilities;
 
+            size_t i = 0;
             for(Image image : images){
                 class_probabilities = FindClassProbabilities(image);
                 pixel_probabilities = FindPixelShadeProbabilities(image);
 
-                //write class and pixel probabilities to file
+                // TODO
+                //trained_model_[i].setClassProbabilities(class_probabilities);
+                //trained_model_[i].setPixelProbabilities(pixel_probabilities); // Adds values to trained_model_
+
+                //AddToFile(ofs, trained_model_[i]);
+                i++;
+
+                // write images to file
             }
         } else {
 
         }
     }
 
-    void Classify::GenerateGivenImageProbabilities(const Image &image) {
-        std::unordered_map<char, double> class_probabilities = FindClassProbabilities(image);
-        std::map<char, double> pixel_probabilities = FindPixelShadeProbabilities(image);
-    }
-
-    std::ifstream &operator>>(std::ifstream &ifs, Classify &classify) {
-        char c = ifs.get();
+    //TODO assums fist value is number for classifications
+    std::ifstream& operator>> (std::ifstream &ifs, Classify &classify) {
+        char c;
         size_t image_index = 0;
         size_t image_characters_read = 0;
         Image current_image;
+        std::vector<Pixel> current_row = {};
+        bool is_image_file = true;
 
-        while (!ifs.eof() && (c == naivebayes::kBlack || c == naivebayes::kBlank || c == naivebayes::kGrey)) {
-            if (image_characters_read == current_image.getWidth() * current_image.getLength()) {
-                image_characters_read = 0;
+        while (ifs.get(c) && !ifs.eof()) {
+            if(std::count(kClassifications.begin(), kClassifications.end(), c)) {
+                is_image_file = false;
+                classify.images_[image_index].setAssignedClass(c);
+                image_index++;
+            } else if((c == naivebayes::kBlack || c == naivebayes::kBlank || c == naivebayes::kGrey || c == '\n') && is_image_file) {
 
-                classify.images_.push_back(current_image);
-                current_image.ClearImage();
+                if (c == '\n') {
+                    current_image.AddPixel(current_row);
+                    current_row.clear();
+
+                    if (image_characters_read == current_image.getWidth() * current_image.getLength()) {
+                        image_characters_read = 0;
+
+                        classify.images_.push_back(current_image);
+                        current_image.ClearImage();
+                    }
+
+                } else {
+                    image_characters_read++;
+                    current_row.push_back(Pixel(c));
+                }
+
+
+            } else if (c == '\n') {
+                continue;
             }
-
-            current_image.AddPixel(c);
-            image_characters_read++;
-        }
-
-        while (!ifs.eof()) {
-            classify.images_[image_index].setAssignedClass(c);
-            c = ifs.get();
-        }
-
-        if (classify.images_.empty() || (classify.images_[0].getWidth() != width_) ||
-            classify.images_[0].getLength() != length_) {
-            throw std::runtime_error("File was empty or of incorrect type");
+            else {
+                throw std::runtime_error("File was empty or of incorrect type");
+            }
         }
 
         return ifs;

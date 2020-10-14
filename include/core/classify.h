@@ -7,9 +7,11 @@
 
 #include <map>
 #include <vector>
-#include <unordered_map>
+#include <iostream>
+#include <fstream>
 
 #include "image.h"
+#include "image_model.h"
 
 namespace naivebayes {
 
@@ -23,7 +25,7 @@ namespace naivebayes {
          * @param classify object to load with images and labels
          * @return the result of the overloaded stream
          */
-        friend std::ifstream &operator >> (std::ifstream &ifs, Classify &classify);
+        friend std::ifstream &operator>> (std::ifstream &ifs, Classify &classify);
 
         /**
          * Finds the probability that a given image is of each class
@@ -31,7 +33,7 @@ namespace naivebayes {
          * @param image to find class probabilities for
          * @return map of each class type, and the corresponding probability the image belongs to it
          */
-        std::unordered_map<char, double> FindClassProbabilities(const Image &image) const;
+        std::map<char, double> FindClassProbabilities(const Image &image) const;
 
         /**
          * Finds the probability of each pixel in the given image being shaded or not
@@ -46,19 +48,20 @@ namespace naivebayes {
          * Initializes the trained model if it hasn't already
          *
          * @param images to add to the trained model file
+         * @param saved_model_file indicates the file to read the model from if already initialized
          */
-        void InitImages(const std::vector<Image> images);
+        void InitModel(const std::vector<Image> images, const std::string &saved_model_file);
 
         /**
-         * Determines the probabilities of the class type and pixel shade
+         * Gets the values of the trained images loaded from data
+         *
+         * @return values in vector<Image> form
          */
-        void GenerateGivenImageProbabilities(const Image &image);
-
         const std::vector<Image> &getTrainedImages() const;
 
     private:
         std::vector<Image> images_;
-
+        std::vector<ImageModel> trained_model_;
 
         /**
          * Generates file with trained model data
