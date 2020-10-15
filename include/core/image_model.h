@@ -26,25 +26,11 @@ namespace naivebayes {
         const std::map<char, double> &getClassProbabilities() const;
 
         /**
-         * Assigns values to class_probabilities_
-         *
-         * @param classProbabilities to assign to class_probabilities_
-         */
-        void SetClassProbabilities(std::map<char, double> &classProbabilities);
-
-        /**
          * Finds pixel_probabilities_
          *
          * @return pixel_probabilities_
          */
         const std::multimap<char, double> &getPixelProbabilities() const;
-
-        /**
-         * Assigns a value to pixel_probabilities_
-         *
-         * @param pixelProbabilities to assign to pixel_probabilities_
-         */
-        void SetPixelProbabilities(std::multimap<char, double> &pixelProbabilities);
         
         /**
          * Constructs ImageModel with the class and pixel probabilities

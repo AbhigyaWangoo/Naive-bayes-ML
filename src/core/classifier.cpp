@@ -119,10 +119,6 @@ namespace naivebayes {
         return ifs;
     }
 
-    void Classifier::GenerateTrainedModel(std::string file_name) {
-        // write trained images and classifications to file
-    }
-
     double Classifier::CalculatePriorProbabilityOfClass(char c) const {
         double total_class_count = 0;
 
@@ -196,10 +192,11 @@ namespace naivebayes {
         std::map<char, double> read_label_probabilities;
         std::multimap<char, double> read_pixel_probabilities;
         bool is_reading_pixels;
-
+        bool is_end = ifstream.eof();
+        
         // TODO add runtime exceptin for if the file is of incorrect type
         ReadDimensions(ifstream);
-        while (!ifstream.eof()) {
+        while (!is_end) {
             double d = 0;
             char c = 0;
             char dlimiter = 0;
@@ -220,10 +217,9 @@ namespace naivebayes {
             if (read_label_probabilities.size() == kClassifications.size() &&
                 read_pixel_probabilities.size() == length_ * width_) {
                 trained_model_.push_back(ImageModel(read_label_probabilities, read_pixel_probabilities));
-
-                if(trained_model_.size() == images_.size()){
-                    break;
-                }
+                
+                read_pixel_probabilities.clear();
+                read_label_probabilities.clear();
             }
         }
     }

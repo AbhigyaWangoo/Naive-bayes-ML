@@ -67,11 +67,6 @@ namespace naivebayes {
         std::vector<ImageModel> trained_model_ = {};
 
         /**
-         * Generates file with trained model data, fills up trained_model_
-         */
-        void GenerateTrainedModel(std::string file_name);
-
-        /**
          * Calculates the P(class= c) probability, or the prior probability an image belonging to a certain class
          *
          * @param c for the possible class
