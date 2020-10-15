@@ -9,12 +9,20 @@ namespace naivebayes {
         class_probabilities_ = classProbabilities;
     }
 
-    void ImageModel::SetPixelProbabilities(std::map<char, double> &pixelProbabilities) {
+    void ImageModel::SetPixelProbabilities(std::multimap<char, double> &pixelProbabilities) {
         pixel_probabilities_ = pixelProbabilities;
     }
 
-    ImageModel::ImageModel(std::map<char, double> &class_probabilities, std::map<char, double> &pixel_probabilities)
+    ImageModel::ImageModel(std::map<char, double> &class_probabilities, std::multimap<char, double> &pixel_probabilities)
             : class_probabilities_(class_probabilities), pixel_probabilities_(pixel_probabilities) {
 
+    }
+
+    const std::multimap<char, double> &ImageModel::getPixelProbabilities() const {
+        return pixel_probabilities_;
+    }
+
+    const std::map<char, double> &ImageModel::getClassProbabilities() const {
+        return class_probabilities_;
     }
 }
