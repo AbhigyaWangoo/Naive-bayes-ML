@@ -12,27 +12,16 @@ namespace naivebayes {
     static const char kBlack = '#';
     static const char kGrey = '+';
 
-    static size_t length_ = 28;
-    static size_t width_ = 28;
-
     /**
      * Class holding representation of Image
      */
     class Image {
-
-    public:
+    public: //todo javadocs
         Image();
 
-        Image(const std::vector<std::vector<Pixel>> &kImagePixels, const char kAssignedClass, const size_t length,
-              const size_t width);
-
-        const char &getKAssignedClass() const;
+        const char &get_assigned_class() const;
 
         const std::vector<std::vector<Pixel>> &getKImagePixels() const;
-
-        const size_t getLength() const;
-
-        const size_t getWidth() const;
 
         /**
          * Adds row of Pixels to current image_pixels_
@@ -40,7 +29,11 @@ namespace naivebayes {
          * @param row to add
          */
         void AddPixel(std::vector<Pixel> &row);
-
+        
+        /**
+         * todo
+         * @param assignedClass 
+         */
         void setAssignedClass(char assignedClass);
 
         /**
