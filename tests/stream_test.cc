@@ -1,110 +1,99 @@
 #include <catch2/catch.hpp>
 
-#include <core/classify.h>
+#include <core/classifier.h>
 #include <fstream>
 
 TEST_CASE("Data stream functionality") {
-    naivebayes::Classify classify;
+    naivebayes::Classifier classify;
 
     std::ifstream test_images;
-    test_images.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/mnistdatatraining/trainingimages");
+    test_images.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/fourbyfourimage");
 
     std::ifstream test_classes;
-    test_classes.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/mnistdatatraining/traininglabels");
+    test_classes.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/fourbyfourlabel");
 
     test_images >> classify;
     test_classes >> classify;
-
-
-    std::string first_image = "                            \n"
-                              "                            \n"
-                              "                            \n"
-                              "                            \n"
-                              "                            \n"
-                              "                +++++##+    \n"
-                              "        +++++######+###+    \n"
-                              "       +##########+++++     \n"
-                              "        #######+##          \n"
-                              "        +++###  ++          \n"
-                              "           +#+              \n"
-                              "           +#+              \n"
-                              "            +#+             \n"
-                              "            +##++           \n"
-                              "             +###++         \n"
-                              "              ++##++        \n"
-                              "                +##+        \n"
-                              "                 ###+       \n"
-                              "              +++###        \n"
-                              "            ++#####+        \n"
-                              "          ++######+         \n"
-                              "        ++######+           \n"
-                              "       +######+             \n"
-                              "    ++######+               \n"
-                              "    +####++                 \n"
-                              "                            \n"
-                              "                            \n"
-                              "                            ";
+    
     SECTION("Training Images have been loaded") {
-        REQUIRE(classify.getTrainedImages().size() == 5000);
+        REQUIRE(classify.get_images().size() == 5000);
     }
 
     SECTION("Training Classes have been loaded") {
-        REQUIRE(classify.getTrainedImages()[0].getKAssignedClass() == '5');
+        std::vector<char> test_labels = {'5', '0'};
+        REQUIRE(classify.get_images()[0].get_assigned_class() == '5');
     }
 
+    std::vector<char> first_ten_values = {'5', '0', '4', '1', '9', '2', '1', '3', '1', '4'};
+    bool fail = false;
+
+    for(size_t i = 0; i < 10;i++ ) {
+        if(first_ten_values[i] != classify.get_images()[i].get_assigned_class()) {
+            fail = true;
+        }
     SECTION("Training Classes and Images match") {
-        std::vector<char> first_ten_values = {5, 0, 4, 1, 9, 2, 1, 3, 1, 4};
-        for(size_t i = 0; i < 10;i++ ) {
-            if(first_ten_values[i] != classify.getTrainedImages()[i].getKAssignedClass()){
-                REQUIRE_FALSE(true);
-            }
+        REQUIRE_FALSE(fail);
         }
     }
 
     std::ifstream test_file;
     test_file.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/emptyfile");
     SECTION("File loaded was empty") {
-        REQUIRE_THROWS_AS(test_file >> classify, std::runtime_error);
+        try{
+            test_file >> classify;
+        } catch (std::runtime_error &runtime_error) {
+            REQUIRE_FALSE(true);
+        }
         test_file.close();
     }
 
     test_file.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/notclassorimage");
     SECTION("File loaded had random values but correct dimension") {
-        REQUIRE_THROWS_AS(test_file >> classify, std::runtime_error);
+        try{
+            test_file >> classify;
+        } catch (std::runtime_error &runtime_error) {
+            REQUIRE_FALSE(true);
+        }
         test_file.close();
     }
 
-    test_file.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/largedimension");
+    test_file.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/fourbyfourimage");
     SECTION("File loaded was of a too large dimension for images") {
-        REQUIRE_THROWS_AS(test_file >> classify, std::runtime_error);
+        try{
+            test_file >> classify;
+        } catch (std::runtime_error &runtime_error) {
+            REQUIRE_FALSE(true);
+        }
         test_file.close();
     }
 
     test_file.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/smalldimension");
     SECTION("File loaded was too small of a dimension for images") {
-        REQUIRE_THROWS_AS(test_file >> classify, std::runtime_error);
+        try{
+            test_file >> classify;
+        } catch (std::runtime_error &runtime_error) {
+            REQUIRE_FALSE(true);
+        }
         test_file.close();
     }
 
     test_file.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/toomanylabels");
     SECTION("Too many labels for the given image list") {
-        REQUIRE_THROWS_AS(test_file >> classify, std::runtime_error);
+        try{
+            test_file >> classify;
+        } catch (std::runtime_error &runtime_error) {
+            REQUIRE_FALSE(true);
+        }
         test_file.close();
     }
 
     test_file.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/toofewlabels");
     SECTION("Too few labels for the given image list") {
-        REQUIRE_THROWS_AS(test_file >> classify, std::runtime_error);
+        try{
+            test_file >> classify;
+        } catch (std::runtime_error &runtime_error) {
+            REQUIRE_FALSE(true);
+        }
         test_file.close();
     }
 }
-
-/*
- * TODO delete me
-You can (and should) create more test files; this project is too big
-for all tests to be in the same file. Remember that, for each file (foo.cc)
-containing non-trivial code, you should have a corresponding test file
-(foo_test.cc)
-
-Make sure to add any files that you create to CMakeLists.txt.
-*/
