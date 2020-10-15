@@ -16,6 +16,7 @@ namespace naivebayes {
     private:
         std::map<char, double> class_probabilities_;
         std::map<char, double> pixel_probabilities_;
+
     public:
         /**
          * Finds class_probabilities_
@@ -29,7 +30,7 @@ namespace naivebayes {
          *
          * @param classProbabilities to assign to class_probabilities_
          */
-        void setClassProbabilities(const std::map<char, double> &classProbabilities);
+        void SetClassProbabilities(std::map<char, double> &classProbabilities);
 
         /**
          * Finds pixel_probabilities_
@@ -43,7 +44,9 @@ namespace naivebayes {
          *
          * @param pixelProbabilities to assign to pixel_probabilities_
          */
-        void setPixelProbabilities(const std::map<char, double> &pixelProbabilities);
+        void SetPixelProbabilities(std::map<char, double> &pixelProbabilities);
+
+        ImageModel(std::map<char, double> &class_probabilities, std::map<char, double> &pixel_probabilities);
     };
 
 }

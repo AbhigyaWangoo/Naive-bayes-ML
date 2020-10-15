@@ -5,20 +5,16 @@
 #include "core/image_model.h"
 
 namespace naivebayes {
-
-    const std::map<char, double> &ImageModel::getClassProbabilities() const {
-        return class_probabilities_;
-    }
-
-    void ImageModel::setClassProbabilities(const std::map<char, double> &classProbabilities) {
+    void ImageModel::SetClassProbabilities(std::map<char, double> &classProbabilities) {
         class_probabilities_ = classProbabilities;
     }
 
-    const std::map<char, double> &ImageModel::getPixelProbabilities() const {
-        return pixel_probabilities_;
+    void ImageModel::SetPixelProbabilities(std::map<char, double> &pixelProbabilities) {
+        pixel_probabilities_ = pixelProbabilities;
     }
 
-    void ImageModel::setPixelProbabilities(const std::map<char, double> &pixelProbabilities) {
-        pixel_probabilities_ = pixelProbabilities;
+    ImageModel::ImageModel(std::map<char, double> &class_probabilities, std::map<char, double> &pixel_probabilities)
+            : class_probabilities_(class_probabilities), pixel_probabilities_(pixel_probabilities) {
+
     }
 }

@@ -50,7 +50,8 @@ include("${CINDER_PATH}/proj/cmake/modules/cinderMakeApp.cmake")
 
 list(APPEND CORE_SOURCE_FILES   src/core/image.cc
                                 src/core/classify.cpp
-                                src/core/pixel.cpp)
+                                src/core/pixel.cpp
+                                src/core/image_model.cpp)
 
 list(APPEND SOURCE_FILES    ${CORE_SOURCE_FILES}
                             src/visualizer/naive_bayes_app.cc
