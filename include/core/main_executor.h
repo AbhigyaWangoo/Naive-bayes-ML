@@ -15,8 +15,8 @@ namespace naivebayes {
      */
     class MainExecutor {
     public:
-        const std::string kTrain = "train";
-        const std::string kSave = "save";
+        const std::string kTrain = "TRAIN";
+        const std::string kSave = "SAVE";
         
         /**
          * Determine action to take based on command line arguments
@@ -24,7 +24,7 @@ namespace naivebayes {
          * @param argc for the size of arguments 
          * @param argv for the arguments
          */
-        void DetermineCommand(int argc, char **argv);
+        void DetermineCommand(std::vector<std::string> argv);
     };   
 }
 
