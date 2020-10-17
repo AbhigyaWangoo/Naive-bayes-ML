@@ -5,7 +5,6 @@
 
 
 namespace naivebayes {
-    
     int Classifier::length_ = 0;
     int Classifier::width_ = 0;
 
@@ -15,11 +14,11 @@ namespace naivebayes {
         double pixels_shade_probability;
 
         for (char c: naivebayes::kClassifications) {
-            current_class_probability = CalculatePriorProbabilityOfClass(c);
+            current_class_probability = CalculatePriorProbabilityOfClass(c, .02);
             pixels_shade_probability = CalculateShadedProbabilityOfAllPixels(image);
 
             classifications.insert(std::pair<char, double>(c, current_class_probability * pixels_shade_probability));
-        }   
+        }
 
         return classifications;
     }
@@ -28,12 +27,13 @@ namespace naivebayes {
         std::multimap<char, double> image_pixel_probabilities;
         double current_probability;
 
-        for (size_t i = 0; i < image.getKImagePixels().size(); i++) {
-            for (size_t j = 0; j < image.getKImagePixels()[i].size(); j++) {
+        for (size_t i = 0; i < image.get_image_pixels().size(); i++) {
+            for (size_t j = 0; j < image.get_image_pixels()[i].size(); j++) {
                 current_probability = CalculateProbabilityPixelIsShaded(i, j, image.get_assigned_class(),
                                                                         .02);
-                
-                image_pixel_probabilities.insert(std::pair<char, double>(image.getKImagePixels()[i][j].getKPixelValue(), current_probability));
+
+                image_pixel_probabilities.insert(
+                        std::pair<char, double>(image.get_image_pixels()[i][j].getKPixelValue(), current_probability));
             }
         }
 
@@ -44,8 +44,7 @@ namespace naivebayes {
         std::ifstream ifs;
 
         ifs.open(saved_model_file);
-        if (ifs.peek() ==
-            std::ifstream::traits_type::eof()) { // TODO We need to write the model to the file while assigning the model values to the image_model_
+        if (ifs.peek() == std::ifstream::traits_type::eof()) {
             ifs.close();
 
             std::ofstream ofs;
@@ -65,7 +64,7 @@ namespace naivebayes {
 
             ofs.close();
 
-        } else { //TODO Assuming the file is full, we need to check for correct values then read the values into the trained_model_
+        } else {
             ReadFromModel(ifs);
             ifs.close();
         }
@@ -83,7 +82,7 @@ namespace naivebayes {
         while (ifs.get(c) && !ifs.eof()) {
             if (std::count(kClassifications.begin(), kClassifications.end(), c)) {
                 is_image_file = false;
-                classify.images_[image_index].setAssignedClass(c);
+                classify.images_[image_index].set_assigned_class(c);
                 image_index++;
             } else if ((c == naivebayes::kBlack || c == naivebayes::kBlank || c == naivebayes::kGrey || c == '\n') &&
                        is_image_file) {
@@ -116,10 +115,13 @@ namespace naivebayes {
                 throw std::runtime_error("incorrect type");
             }
         }
+        if (classify.images_.empty()) {
+            throw std::runtime_error("invalid file");
+        }
         return ifs;
     }
 
-    double Classifier::CalculatePriorProbabilityOfClass(char c) const {
+    double Classifier::CalculatePriorProbabilityOfClass(char c, double lapace_k) const {
         double total_class_count = 0;
 
         for (const Image &image : images_) {
@@ -127,21 +129,22 @@ namespace naivebayes {
                 total_class_count++;
             }
         }
-
-        return total_class_count / images_.size();
+        
+        double prob = (lapace_k + total_class_count) / (2 * lapace_k + images_.size());
+        return prob;
     }
 
     double Classifier::CalculateShadedProbabilityOfAllPixels(const Image &image) const {
         double total_pixel_probability = 0;
 
-        for (size_t i = 0; i < image.getKImagePixels().size(); i++) {
-            for (size_t j = 0; j < image.getKImagePixels()[i].size(); j++) {
+        for (size_t i = 0; i < image.get_image_pixels().size(); i++) {
+            for (size_t j = 0; j < image.get_image_pixels()[i].size(); j++) {
                 if (total_pixel_probability == 0) {
                     total_pixel_probability += CalculateProbabilityPixelIsShaded(i, j, image.get_assigned_class(),
                                                                                  0.02);
+                } else {
+                    total_pixel_probability *= CalculateProbabilityPixelIsShaded(i, j, image.get_assigned_class(), 0.02);   
                 }
-
-                total_pixel_probability *= CalculateProbabilityPixelIsShaded(i, j, image.get_assigned_class(), 0.02);
             }
         }
 
@@ -154,36 +157,35 @@ namespace naivebayes {
         double num_images_of_classification = 0;
 
         for (const Image &image : images_) {
-            if (image.get_assigned_class() == classification) { // P(i,j = 1 | class = c)
+            if (image.get_assigned_class() == classification) {
                 num_images_of_classification++;
             }
-
-            if (image.getKImagePixels()[x][y].IsShaded()) {
+            
+            if (image.get_image_pixels()[x][y].IsShaded() && image.get_assigned_class() == classification) {
                 num_images_with_shaded_pixel_at_spot++;
             }
         }
-
+        
         return (lapace_k + num_images_with_shaded_pixel_at_spot) / (2 * lapace_k + num_images_of_classification);
     }
 
     const std::vector<Image> &Classifier::get_images() const {
         return images_;
     }
+
     void Classifier::AddModelToFile(std::ofstream &ofstream, ImageModel &model) {
         std::map<char, double> classification_probabilities = model.getClassProbabilities();
         std::multimap<char, double> pixel_probabilities = model.getPixelProbabilities();
         std::map<char, double>::iterator it;
-        int i = 0, j = 0;
+        
 
         for (it = classification_probabilities.begin(); it != classification_probabilities.end(); it++) {
             ofstream << it->first << it->second << ",";
-            i++;
         }
         ofstream.flush();
 
         for (it = pixel_probabilities.begin(); it != pixel_probabilities.end(); it++) {
             ofstream << it->first << it->second << ",";
-            j++;
         }
         ofstream.flush();
     }
@@ -192,11 +194,10 @@ namespace naivebayes {
         std::map<char, double> read_label_probabilities;
         std::multimap<char, double> read_pixel_probabilities;
         bool is_reading_pixels;
-        bool is_end = ifstream.eof();
+        bool is_reading_labels;
         
-        // TODO add runtime exceptin for if the file is of incorrect type
         ReadDimensions(ifstream);
-        while (!is_end) {
+        while (!ifstream.eof() && trained_model_.size() != images_.size() ) {
             double d = 0;
             char c = 0;
             char dlimiter = 0;
@@ -205,19 +206,21 @@ namespace naivebayes {
             ifstream >> d;
             ifstream.get(dlimiter);
 
-            is_reading_pixels = (c == kBlank || c == kGrey || c == kBlack) &&
-                                !std::count(kClassifications.begin(), kClassifications.end(), c);
-
+            is_reading_pixels = (c == kBlank || c == kGrey || c == kBlack);
+            is_reading_labels = std::count(kClassifications.begin(), kClassifications.end(), c);
+            
             if (is_reading_pixels) {
                 read_pixel_probabilities.insert(std::pair<char, double>(c, d));
-            } else {
+            } else if (is_reading_labels) {
                 read_label_probabilities.insert(std::pair<char, double>(c, d));
+            } else {
+                throw std::runtime_error("Not a model file");
             }
 
             if (read_label_probabilities.size() == kClassifications.size() &&
                 read_pixel_probabilities.size() == length_ * width_) {
                 trained_model_.push_back(ImageModel(read_label_probabilities, read_pixel_probabilities));
-                
+
                 read_pixel_probabilities.clear();
                 read_label_probabilities.clear();
             }
@@ -232,7 +235,11 @@ namespace naivebayes {
         ifstream.get(c);
     }
 
-    void Classifier::WriteDimensions(std::ofstream& ofstream) {
+    void Classifier::WriteDimensions(std::ofstream &ofstream) {
         ofstream << Classifier::length_ << " " << Classifier::width_ << " ";
+    }
+
+    const std::vector<ImageModel> &Classifier::get_trained_model() const {
+        return trained_model_;
     }
 }  // namespace naivebayes

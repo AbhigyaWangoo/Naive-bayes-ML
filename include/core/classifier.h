@@ -22,6 +22,7 @@ namespace naivebayes {
     public:
         static int length_;
         static int width_;
+
         /**
          * Overloaded operator to load trained images into list of Images
          *
@@ -30,6 +31,32 @@ namespace naivebayes {
          * @return the result of the overloaded stream
          */
         friend std::ifstream &operator>>(std::ifstream &ifs, Classifier &classify);
+
+        /**
+         * Initializes the trained model if it hasn't already with images_
+         *
+         * @param images to add to the trained model file
+         * @param saved_model_file indicates the file to read the model from if already initialized
+         */
+        void InitModel(const std::string &saved_model_file);
+
+        /**
+         * Gets the values of the trained images loaded from data
+         *
+         * @return values in vector<Image> form
+         */
+        const std::vector<Image> &get_images() const;
+
+        /**
+         * Gets values of trained model
+         * 
+         * @return trained model 
+         */
+        const std::vector<ImageModel> &get_trained_model() const;
+
+    private:
+        std::vector<Image> images_;
+        std::vector<ImageModel> trained_model_ = {};
 
         /**
          * Finds the probability that a given image is of each class
@@ -48,31 +75,13 @@ namespace naivebayes {
         std::multimap<char, double> FindPixelShadeProbabilities(const Image &image) const;
 
         /**
-         * Initializes the trained model if it hasn't already with images_
-         *
-         * @param images to add to the trained model file
-         * @param saved_model_file indicates the file to read the model from if already initialized
-         */
-        void InitModel(const std::string &saved_model_file);
-
-        /**
-         * Gets the values of the trained images loaded from data
-         *
-         * @return values in vector<Image> form
-         */
-        const std::vector<Image> &get_images() const;
-
-    private:
-        std::vector<Image> images_;
-        std::vector<ImageModel> trained_model_ = {};
-
-        /**
          * Calculates the P(class= c) probability, or the prior probability an image belonging to a certain class
          *
          * @param c for the possible class
+         * @param lapace_k for naivebayes' algorithm
          * @return the appropriate probability
          */
-        double CalculatePriorProbabilityOfClass(char c) const;
+        double CalculatePriorProbabilityOfClass(char c, double lapace_k) const;
 
         /**
          * Calculates the "ALLPIXELVALUES", or the total shaded probability of each of the pixels in an image
@@ -108,7 +117,7 @@ namespace naivebayes {
          * @param ifstream specifies the file to read from
          */
         void ReadFromModel(std::ifstream &ifstream);
-        
+
         /**
          * Reads the dimensions into length_ and width_
          * 
@@ -121,7 +130,7 @@ namespace naivebayes {
          * 
          * @param ofstream specifies file to write dimensions to 
          */
-        void WriteDimensions(std::ofstream& ofstream);
+        void WriteDimensions(std::ofstream &ofstream);
     };
 
 }
