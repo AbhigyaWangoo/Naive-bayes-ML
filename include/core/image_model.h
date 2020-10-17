@@ -7,6 +7,8 @@
 
 #include <map>
 #include <vector>
+#include <iostream>
+#include <fstream>
 
 namespace naivebayes {
     /**
@@ -14,6 +16,15 @@ namespace naivebayes {
      */
     class ImageModel {
     public:
+        /**
+         * Overloaded functionality to output image model to file
+         * 
+         * @param ofs specifies file to output to 
+         * @param image_model specifies the ImageModel to output
+         * @return stream of output data
+         */
+        friend std::ofstream &operator<<(std::ofstream &ofs, ImageModel &image_model);
+
         /**
          * Finds class_probabilities_
          *
@@ -35,7 +46,7 @@ namespace naivebayes {
          * @param pixel_probabilities to initialize with
          */
         ImageModel(std::map<char, double> &class_probabilities, std::multimap<char, double> &pixel_probabilities);
-
+        
     private:
         std::map<char, double> class_probabilities_;
         std::multimap<char, double> pixel_probabilities_;

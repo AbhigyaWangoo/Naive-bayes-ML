@@ -101,14 +101,6 @@ namespace naivebayes {
         double CalculateProbabilityPixelIsShaded(const int x, const int y, const char classification) const;
 
         /**
-         * Writes a specific model's information to a file
-         *
-         * @param ofstream specifies the file to write to
-         * @param model specifies the model to write
-         */
-        void AddModelToFile(std::ofstream &ofstream, ImageModel &model);
-
-        /**
          * Reads a file's information to a trained_model_
          *
          * @param ifstream specifies the file to read from

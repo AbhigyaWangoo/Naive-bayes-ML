@@ -56,7 +56,8 @@ namespace naivebayes {
                 ImageModel current_image_model = ImageModel(class_probabilities, pixel_probabilities);
 
                 trained_model_.push_back(current_image_model);
-                AddModelToFile(ofs, trained_model_[i]);
+
+                ofs << trained_model_[i]; 
                 i++;
             }
 
@@ -167,23 +168,6 @@ namespace naivebayes {
 
     const std::vector<Image> &Classifier::get_images() const {
         return images_;
-    }
-
-    void Classifier::AddModelToFile(std::ofstream &ofstream, ImageModel &model) {
-        std::map<char, double> classification_probabilities = model.get_class_probabilities();
-        std::multimap<char, double> pixel_probabilities = model.get_pixel_probabilities();
-        std::map<char, double>::iterator it;
-
-
-        for (it = classification_probabilities.begin(); it != classification_probabilities.end(); it++) {
-            ofstream << it->first << it->second << ",";
-        }
-        ofstream.flush();
-
-        for (it = pixel_probabilities.begin(); it != pixel_probabilities.end(); it++) {
-            ofstream << it->first << it->second << ",";
-        }
-        ofstream.flush();
     }
 
     void Classifier::ReadFromModel(std::ifstream &ifstream) {
