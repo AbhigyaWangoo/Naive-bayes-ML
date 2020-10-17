@@ -3,7 +3,6 @@
 //
 #include "core/classifier.h"
 
-
 namespace naivebayes {
     int Classifier::length_ = 0;
     int Classifier::width_ = 0;
@@ -14,7 +13,7 @@ namespace naivebayes {
         double pixels_shade_probability;
 
         for (char c: naivebayes::kClassifications) {
-            current_class_probability = CalculatePriorProbabilityOfClass(c, .02);
+            current_class_probability = CalculatePriorProbabilityOfClass(c);
             pixels_shade_probability = CalculateShadedProbabilityOfAllPixels(image);
 
             classifications.insert(std::pair<char, double>(c, current_class_probability * pixels_shade_probability));
@@ -29,8 +28,7 @@ namespace naivebayes {
 
         for (size_t i = 0; i < image.get_image_pixels().size(); i++) {
             for (size_t j = 0; j < image.get_image_pixels()[i].size(); j++) {
-                current_probability = CalculateProbabilityPixelIsShaded(i, j, image.get_assigned_class(),
-                                                                        .02);
+                current_probability = CalculateProbabilityPixelIsShaded(i, j, image.get_assigned_class());
 
                 image_pixel_probabilities.insert(
                         std::pair<char, double>(image.get_image_pixels()[i][j].getKPixelValue(), current_probability));
@@ -40,7 +38,7 @@ namespace naivebayes {
         return image_pixel_probabilities;
     }
 
-    void Classifier::InitModel(const std::string &saved_model_file) {
+    void Classifier::InitializeModel(const std::string &saved_model_file) {
         std::ifstream ifs;
 
         ifs.open(saved_model_file);
@@ -121,7 +119,7 @@ namespace naivebayes {
         return ifs;
     }
 
-    double Classifier::CalculatePriorProbabilityOfClass(char c, double lapace_k) const {
+    double Classifier::CalculatePriorProbabilityOfClass(char c) const {
         double total_class_count = 0;
 
         for (const Image &image : images_) {
@@ -129,7 +127,7 @@ namespace naivebayes {
                 total_class_count++;
             }
         }
-        
+
         double prob = (lapace_k + total_class_count) / (2 * lapace_k + images_.size());
         return prob;
     }
@@ -140,10 +138,9 @@ namespace naivebayes {
         for (size_t i = 0; i < image.get_image_pixels().size(); i++) {
             for (size_t j = 0; j < image.get_image_pixels()[i].size(); j++) {
                 if (total_pixel_probability == 0) {
-                    total_pixel_probability += CalculateProbabilityPixelIsShaded(i, j, image.get_assigned_class(),
-                                                                                 0.02);
+                    total_pixel_probability += CalculateProbabilityPixelIsShaded(i, j, image.get_assigned_class());
                 } else {
-                    total_pixel_probability *= CalculateProbabilityPixelIsShaded(i, j, image.get_assigned_class(), 0.02);   
+                    total_pixel_probability *= CalculateProbabilityPixelIsShaded(i, j, image.get_assigned_class());
                 }
             }
         }
@@ -151,8 +148,7 @@ namespace naivebayes {
         return total_pixel_probability;
     }
 
-    double Classifier::CalculateProbabilityPixelIsShaded(const size_t x, const size_t y, const char classification,
-                                                         const double lapace_k) const {
+    double Classifier::CalculateProbabilityPixelIsShaded(const int x, const int y, const char classification) const {
         double num_images_with_shaded_pixel_at_spot = 0;
         double num_images_of_classification = 0;
 
@@ -160,12 +156,12 @@ namespace naivebayes {
             if (image.get_assigned_class() == classification) {
                 num_images_of_classification++;
             }
-            
+
             if (image.get_image_pixels()[x][y].IsShaded() && image.get_assigned_class() == classification) {
                 num_images_with_shaded_pixel_at_spot++;
             }
         }
-        
+
         return (lapace_k + num_images_with_shaded_pixel_at_spot) / (2 * lapace_k + num_images_of_classification);
     }
 
@@ -174,10 +170,10 @@ namespace naivebayes {
     }
 
     void Classifier::AddModelToFile(std::ofstream &ofstream, ImageModel &model) {
-        std::map<char, double> classification_probabilities = model.getClassProbabilities();
-        std::multimap<char, double> pixel_probabilities = model.getPixelProbabilities();
+        std::map<char, double> classification_probabilities = model.get_class_probabilities();
+        std::multimap<char, double> pixel_probabilities = model.get_pixel_probabilities();
         std::map<char, double>::iterator it;
-        
+
 
         for (it = classification_probabilities.begin(); it != classification_probabilities.end(); it++) {
             ofstream << it->first << it->second << ",";
@@ -195,9 +191,9 @@ namespace naivebayes {
         std::multimap<char, double> read_pixel_probabilities;
         bool is_reading_pixels;
         bool is_reading_labels;
-        
+
         ReadDimensions(ifstream);
-        while (!ifstream.eof() && trained_model_.size() != images_.size() ) {
+        while (!ifstream.eof() && trained_model_.size() != images_.size()) {
             double d = 0;
             char c = 0;
             char dlimiter = 0;
@@ -208,7 +204,7 @@ namespace naivebayes {
 
             is_reading_pixels = (c == kBlank || c == kGrey || c == kBlack);
             is_reading_labels = std::count(kClassifications.begin(), kClassifications.end(), c);
-            
+
             if (is_reading_pixels) {
                 read_pixel_probabilities.insert(std::pair<char, double>(c, d));
             } else if (is_reading_labels) {

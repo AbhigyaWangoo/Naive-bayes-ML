@@ -35,7 +35,7 @@ namespace naivebayes {
                 ifs_images >> classifier;
                 ifs_labels >> classifier;
 
-                classifier.InitModel(file_save);
+                classifier.InitializeModel(file_save);
             } catch (std::runtime_error error) {
                 throw std::runtime_error("Oops! Invalid file or formatting");
             }

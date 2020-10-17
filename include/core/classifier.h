@@ -5,16 +5,16 @@
 #ifndef NAIVE_BAYES_CLASSIFIER_H
 #define NAIVE_BAYES_CLASSIFIER_H
 
-#include "image.h"
-#include "image_model.h"
-
 #include <map>
 #include <vector>
 #include <iostream>
-
 #include <fstream>
 
+#include "image.h"
+#include "image_model.h"
+
 namespace naivebayes {
+    const double lapace_k = .02;
     /**
      * Class containing all naive bayes computational functionality
      */
@@ -38,7 +38,7 @@ namespace naivebayes {
          * @param images to add to the trained model file
          * @param saved_model_file indicates the file to read the model from if already initialized
          */
-        void InitModel(const std::string &saved_model_file);
+        void InitializeModel(const std::string &saved_model_file);
 
         /**
          * Gets the values of the trained images loaded from data
@@ -78,10 +78,9 @@ namespace naivebayes {
          * Calculates the P(class= c) probability, or the prior probability an image belonging to a certain class
          *
          * @param c for the possible class
-         * @param lapace_k for naivebayes' algorithm
          * @return the appropriate probability
          */
-        double CalculatePriorProbabilityOfClass(char c, double lapace_k) const;
+        double CalculatePriorProbabilityOfClass(char c) const;
 
         /**
          * Calculates the "ALLPIXELVALUES", or the total shaded probability of each of the pixels in an image
@@ -97,11 +96,9 @@ namespace naivebayes {
          * @param x location of the pixel
          * @param y location of the pixel
          * @param classification represents the assigned classification
-         * @param lapace_k represents the lapace k constant used
          * @return the probability of the pixel being shaded
          */
-        double CalculateProbabilityPixelIsShaded(const size_t x, const size_t y, const char classification,
-                                                 const double lapace_k) const;
+        double CalculateProbabilityPixelIsShaded(const int x, const int y, const char classification) const;
 
         /**
          * Writes a specific model's information to a file

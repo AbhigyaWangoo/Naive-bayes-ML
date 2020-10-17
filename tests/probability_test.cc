@@ -22,7 +22,7 @@ TEST_CASE("Basic tests for probability calculations") {
     ifs_images >> classifier;
     ifs_labels >> classifier;
 
-    classifier.InitModel(
+    classifier.InitializeModel(
             "/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/trainedthreebythreemodel");
 
     SECTION("All Models have been loaded") {
@@ -71,7 +71,7 @@ TEST_CASE("Basic tests for probability calculations") {
         
         bool is_proper = true;
         for (size_t i = 0; i < 3; i++) {
-            if (classifier.get_trained_model()[i].getPixelProbabilities() != correct_pixels[i]) {
+            if (classifier.get_trained_model()[i].get_pixel_probabilities() != correct_pixels[i]) {
                 is_proper = false;
             }
         }
@@ -110,7 +110,7 @@ TEST_CASE("Basic tests for probability calculations") {
         
         bool is_proper = true;
         for (size_t i = 0; i < 2; i++) {
-            if (classifier.get_trained_model()[i].getClassProbabilities() != correct_labels[i]) {
+            if (classifier.get_trained_model()[i].get_class_probabilities() != correct_labels[i]) {
                 is_proper = false;
             }
         }
@@ -119,7 +119,7 @@ TEST_CASE("Basic tests for probability calculations") {
 
     SECTION("Trained model file specified isn't a model") {
         try {
-            classifier.InitModel(
+            classifier.InitializeModel(
                     "/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/notclassorimage");
         } catch (std::runtime_error &error) {
             REQUIRE(true);

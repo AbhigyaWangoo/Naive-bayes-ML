@@ -5,16 +5,14 @@
 
 TEST_CASE("Testing CLI") {
     naivebayes::MainExecutor mainExecutor;
-    std::string correct_images_path = "";
-    std::string correct_labels_path = "";
+
     SECTION("Ensure command is properly followed") {
-        
-            char **command = (char **) "./execute train /Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-"
-                                       "AbhiWangoo/data/testingdata/threebythreeimages /Users/abhigyawangoo/CLionProjects/"
-                                       "Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/threebythreemodels save "
-                                       "/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data"
-                                       "/testingdata/newtestfile";   
-        
+        char **command = (char **) "./execute train /Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-"
+                                   "AbhiWangoo/data/testingdata/threebythreeimages /Users/abhigyawangoo/CLionProjects/"
+                                   "Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/threebythreemodels save "
+                                   "/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data"
+                                   "/testingdata/newtestfile";
+
         SECTION("Create model in new file") {
             try {
                 mainExecutor.DetermineCommand(6, command);
@@ -57,7 +55,7 @@ TEST_CASE("Testing CLI") {
                                            "Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/"
                                            "newtestfile";
 
-                        mainExecutor.DetermineCommand(6, command);
+                mainExecutor.DetermineCommand(6, command);
             } catch (std::runtime_error error) {
                 REQUIRE(true);
             }
@@ -66,11 +64,11 @@ TEST_CASE("Testing CLI") {
         SECTION("Not putting in a file for labels") {
             try {
                 char **command = (char **) "train /Users/abhigyawangoo/CLionProjects/CINDer"
-                          "/my-projects/naivebayes-AbhiWangoo/DATa/testingdata/"
-                          "threebythreeimages /Users/abhigyawangoo/CLionProjects/Cinder/"
-                          "save /Users/abhigyawangoo/CLionProjects/Cinder/my-projects"
-                          "/naivebayes-AbhiWangoo/data/testingdata/newtestfile";
-                
+                                           "/my-projects/naivebayes-AbhiWangoo/DATa/testingdata/"
+                                           "threebythreeimages /Users/abhigyawangoo/CLionProjects/Cinder/"
+                                           "save /Users/abhigyawangoo/CLionProjects/Cinder/my-projects"
+                                           "/naivebayes-AbhiWangoo/data/testingdata/newtestfile";
+
                 mainExecutor.DetermineCommand(6, command);
             } catch (std::runtime_error error) {
                 REQUIRE(true);
@@ -84,7 +82,7 @@ TEST_CASE("Testing CLI") {
                                            "threebythreeimages /Users/abhigyawangoo/CLionProjects/Cinder/"
                                            "save /Users/abhigyawangoo/CLionProjects/Cinder/my-projects"
                                            "/naivebayes-AbhiWangoo/data/testingdata/newtestfile";
-                
+
                 mainExecutor.DetermineCommand(6, command);
             } catch (std::runtime_error error) {
                 REQUIRE(true);
@@ -99,9 +97,9 @@ TEST_CASE("Testing CLI") {
                                        "/testingdata/newtestfile";
             std::ifstream ifs;
             SECTION("Create model in new file") {
-                try{
+                try {
                     mainExecutor.DetermineCommand(6, command);
-                } catch(std::runtime_error error){
+                } catch (std::runtime_error error) {
                     REQUIRE(true);
                 }
             }
@@ -111,9 +109,9 @@ TEST_CASE("Testing CLI") {
             char **command = (char **) "./executetrain/threebythreeimages/threebythreemodelssave/newtestfile";
             std::ifstream ifs;
             SECTION("Create model in new file") {
-                try{
+                try {
                     mainExecutor.DetermineCommand(6, command);
-                } catch(std::runtime_error error){
+                } catch (std::runtime_error error) {
                     REQUIRE(true);
                 }
             }
