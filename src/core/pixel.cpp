@@ -4,14 +4,13 @@
 #include "core/pixel.h"
 
 namespace naivebayes {
-
     bool Pixel::IsShaded() const {
-        return kPixelValue != ' ' && (kPixelValue == '#' || kPixelValue != '+');
+        return kPixelValue == '+' || kPixelValue == '#'; 
     }
 
     Pixel::Pixel(const char &pixelValue) : kPixelValue(pixelValue) {}
 
-    Pixel::Pixel() {
+    Pixel::Pixel() : kPixelValue(' ') {
     }
 
     const char Pixel::getKPixelValue() const {

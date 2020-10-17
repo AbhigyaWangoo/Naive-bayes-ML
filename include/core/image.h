@@ -6,6 +6,7 @@
 
 namespace naivebayes {
 
+    // Global member variables
     static const std::vector<char> kClassifications = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
     static const char kBlank = ' ';
@@ -16,12 +17,25 @@ namespace naivebayes {
      * Class holding representation of Image
      */
     class Image {
-    public: //todo javadocs
+    public: 
+        /**
+         * Empty constructor for Image
+         */
         Image();
-
+        
+        /**
+         * Getter for assigned_class
+         * 
+         * @return assigned_class 
+         */
         const char &get_assigned_class() const;
 
-        const std::vector<std::vector<Pixel>> &getKImagePixels() const;
+        /**
+         * Getter for kImagePixels
+         * 
+         * @return image pixel values 
+         */
+        const std::vector<std::vector<Pixel>> &get_image_pixels() const;
 
         /**
          * Adds row of Pixels to current image_pixels_
@@ -31,10 +45,11 @@ namespace naivebayes {
         void AddPixel(std::vector<Pixel> &row);
         
         /**
-         * todo
-         * @param assignedClass 
+         * Setter for assigned_class
+         * 
+         * @param assignedClass to set with 
          */
-        void setAssignedClass(char assignedClass);
+        void set_assigned_class(char assignedClass);
 
         /**
          * clears entire image
@@ -42,8 +57,8 @@ namespace naivebayes {
         void ClearImage();
 
     private:
-        std::vector<std::vector<Pixel>> image_pixels_; // 2d vector of pixels
-        char assigned_class_ = ' ';
+        std::vector<std::vector<Pixel>> image_pixels_;
+        char assigned_class_;
     };
 
 }  // namespace naivebayes

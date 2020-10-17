@@ -11,7 +11,7 @@ namespace naivebayes {
      */
     class Pixel {
     private:
-        const char kPixelValue = ' ';
+        const char kPixelValue;
 
     public:
         /**
@@ -20,9 +20,17 @@ namespace naivebayes {
          * @param pixelValue to initialize kPixelValue with
          */
         Pixel(const char &pixelValue);
-
+        
+        /**
+         * Simple empty constructor
+         */
         Pixel();
-
+        
+        /**
+         * Gets Pixel's value
+         * 
+         * @return kPixelValue 
+         */
         const char getKPixelValue() const;
 
         /**

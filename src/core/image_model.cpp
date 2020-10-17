@@ -10,11 +10,11 @@ namespace naivebayes {
 
     }
 
-    const std::multimap<char, double> &ImageModel::getPixelProbabilities() const {
+    const std::multimap<char, double> &ImageModel::get_pixel_probabilities() const {
         return pixel_probabilities_;
     }
 
-    const std::map<char, double> &ImageModel::getClassProbabilities() const {
+    const std::map<char, double> &ImageModel::get_class_probabilities() const {
         return class_probabilities_;
     }
 }

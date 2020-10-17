@@ -5,11 +5,11 @@ namespace naivebayes {
         return assigned_class_;
     }
 
-    const std::vector<std::vector<Pixel>> &Image::getKImagePixels() const {
+    const std::vector<std::vector<Pixel>> &Image::get_image_pixels() const {
         return image_pixels_;
     }
 
-    void Image::setAssignedClass(char assignedClass) {
+    void Image::set_assigned_class(char assignedClass) {
         assigned_class_ = assignedClass;
     }
 

@@ -13,24 +13,20 @@ namespace naivebayes {
      * Trained model for specific Image
      */
     class ImageModel {
-    private:
-        std::map<char, double> class_probabilities_;
-        std::multimap<char, double> pixel_probabilities_;
-
     public:
         /**
          * Finds class_probabilities_
          *
          * @return class_probabilities_
          */
-        const std::map<char, double> &getClassProbabilities() const;
+        const std::map<char, double> &get_class_probabilities() const;
 
         /**
          * Finds pixel_probabilities_
          *
          * @return pixel_probabilities_
          */
-        const std::multimap<char, double> &getPixelProbabilities() const;
+        const std::multimap<char, double> &get_pixel_probabilities() const;
         
         /**
          * Constructs ImageModel with the class and pixel probabilities
@@ -39,6 +35,10 @@ namespace naivebayes {
          * @param pixel_probabilities to initialize with
          */
         ImageModel(std::map<char, double> &class_probabilities, std::multimap<char, double> &pixel_probabilities);
+
+    private:
+        std::map<char, double> class_probabilities_;
+        std::multimap<char, double> pixel_probabilities_;
     };
 
 }
