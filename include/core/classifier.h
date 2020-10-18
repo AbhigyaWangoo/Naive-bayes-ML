@@ -9,6 +9,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <complex>
 
 #include "image.h"
 #include "image_model.h"
@@ -22,7 +23,15 @@ namespace naivebayes {
     public:
         static int length_;
         static int width_;
-
+        
+        /**
+         * Finds the probability that a given image is of each class
+         *
+         * @param image to find class probabilities for
+         * @return map of each class type, and the corresponding probability the image belongs to it
+         */
+        std::map<char, double> FindLikelyhoodScore(const Image &image) const;
+        
         /**
          * Overloaded operator to load trained images into list of Images
          *
@@ -59,28 +68,20 @@ namespace naivebayes {
         std::vector<ImageModel> trained_model_ = {};
 
         /**
-         * Finds the probability that a given image is of each class
-         *
-         * @param image to find class probabilities for
-         * @return map of each class type, and the corresponding probability the image belongs to it
-         */
-        std::map<char, double> FindClassProbabilities(const Image &image) const;
-
-        /**
          * Finds the probability of each pixel in the given image being shaded or not
          *
          * @param image to determine pixel probabilities for
+         * @param label to 
          * @return map of each pixel value and the corresponding probability of it being shaded
          */
-        std::multimap<char, double> FindPixelShadeProbabilities(const Image &image) const;
+        std::multimap<char, double> FindPixelShadeProbabilities(const Image &image, const char label) const;
 
         /**
-         * Calculates the P(class= c) probability, or the prior probability an image belonging to a certain class
-         *
-         * @param c for the possible class
-         * @return the appropriate probability
+         * Calculates the P(class= c) probabilities, or the prior probability for a class belonging to each class
+         * 
+         * @return a map of the classes and prior probability of each classification
          */
-        double CalculatePriorProbabilityOfClass(char c) const;
+        std::map<char, double> CalculatePriorProbabilitiesOfModel() const;
 
         /**
          * Calculates the "ALLPIXELVALUES", or the total shaded probability of each of the pixels in an image
