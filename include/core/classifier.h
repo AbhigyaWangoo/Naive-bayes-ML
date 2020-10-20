@@ -15,7 +15,7 @@
 #include "image_model.h"
 
 namespace naivebayes {
-    const double lapace_k = .02;
+    const double lapace_k = 1;
     /**
      * Class containing all naive bayes computational functionality
      */
@@ -25,12 +25,12 @@ namespace naivebayes {
         static int width_;
         
         /**
-         * Finds the probability that a given image is of each class
-         *
-         * @param image to find class probabilities for
-         * @return map of each class type, and the corresponding probability the image belongs to it
+         * Determines what image the label belongs to
+         * 
+         * @param image file path to classify
+         * @return class the image belongs to
          */
-        std::map<char, double> FindLikelyhoodScore(const Image &image) const;
+        char DetermineImageLabel(const Image &image);
         
         /**
          * Overloaded operator to load trained images into list of Images
@@ -66,7 +66,15 @@ namespace naivebayes {
     private:
         std::vector<Image> images_;
         std::vector<ImageModel> trained_model_ = {};
-
+        
+        /**
+         * Finds the probability that a given image is of each class
+         *
+         * @param image to find class probabilities for
+         * @return map of each class type, and the corresponding probability the image belongs to it
+         */
+        std::map<char, double> FindLikelyhoodScores(const Image &image);
+        
         /**
          * Finds the probability of each pixel in the given image being shaded or not
          *
@@ -86,10 +94,10 @@ namespace naivebayes {
         /**
          * Calculates the "ALLPIXELVALUES", or the total shaded probability of each of the pixels in an image
          *
-         * @param image to calculate for
+         * @param label to calculate for
          * @return the total probability
          */
-        double CalculateShadedProbabilityOfAllPixels(const Image &image) const;
+        double CalculateShadedProbabilityOfAllPixels(const std::multimap<char, double> &pixels) const;
 
         /**
          * Calculates the probability that an individual pixel is shaded
@@ -97,9 +105,10 @@ namespace naivebayes {
          * @param x location of the pixel
          * @param y location of the pixel
          * @param classification represents the assigned classification
+         * @param shaded represents whether we're calculating for a shaded or unshaded pixel
          * @return the probability of the pixel being shaded
          */
-        double CalculateProbabilityPixelIsShaded(const int x, const int y, const char classification) const;
+        double CalculatePixelShadeProbability(const int x, const int y, const char classification, const bool shaded) const;
 
         /**
          * Reads a file's information to a trained_model_
