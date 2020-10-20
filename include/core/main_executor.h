@@ -17,6 +17,7 @@ namespace naivebayes {
     public:
         const std::string kTrain = "TRAIN";
         const std::string kSave = "SAVE";
+        const std::string kTest = "TEST";
         
         /**
          * Determine action to take based on command line arguments
