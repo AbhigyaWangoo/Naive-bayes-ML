@@ -46,6 +46,11 @@ namespace naivebayes {
          * @param pixel_probabilities to initialize with
          */
         ImageModel(std::map<char, double> &class_probabilities, std::multimap<char, double> &pixel_probabilities);
+
+        /**
+         * Empty ImageModel constructor
+         */
+        ImageModel();
         
     private:
         std::map<char, double> class_probabilities_;

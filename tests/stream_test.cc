@@ -35,7 +35,7 @@ TEST_CASE("Data stream functionality") {
                             j--;
                             continue;
                         }
-                        if(current_image.get_image_pixels()[i][j].getKPixelValue() != c) {
+                        if(current_image.get_image_pixels()[i][j].get_pixel_value() != c) {
                             REQUIRE(false);
                         }
                     }
@@ -66,7 +66,7 @@ TEST_CASE("Data stream functionality") {
 
     SECTION("Test new Image dimensions of 4 by 4") {
 
-        naivebayes::Classifier classify_4_images;
+        naivebayes::Classifier classify_8_images;
 
         std::ifstream test_4_images;
         std::ifstream test_4_labels;
@@ -74,11 +74,11 @@ TEST_CASE("Data stream functionality") {
         test_4_images.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/fourbyfourimages");
         test_4_labels.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/fourbyfourlabels");
 
-        test_4_images >> classify_4_images;
-        test_4_labels >> classify_4_images;
+        test_4_images >> classify_8_images;
+        test_4_labels >> classify_8_images;
 
         SECTION("All images have been loaded in with labels") {
-            bool succeed = classify_4_images.get_images().size() == 4 && classify_4_images.length_ == 4 && classify_4_images.width_ == 4;
+            bool succeed = classify_8_images.get_images().size() == 8 && classify_8_images.length_ == 4 && classify_8_images.width_ == 4;
             
             REQUIRE(succeed);
         }
@@ -88,7 +88,7 @@ TEST_CASE("Data stream functionality") {
             char c;
             file.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/fourbyfourimages");
 
-            for(const naivebayes::Image& current_image : classify_4_images.get_images()) {
+            for(const naivebayes::Image& current_image : classify_8_images.get_images()) {
                 for(size_t i = 0; i < current_image.get_image_pixels().size(); i++) {
                     for(size_t j = 0; j < current_image.get_image_pixels()[i].size(); j++) {
                         file.get(c);
@@ -96,7 +96,7 @@ TEST_CASE("Data stream functionality") {
                         if(c == '\n'){
                             file.get(c);
                         }
-                        if(current_image.get_image_pixels()[i][j].getKPixelValue() != c) {
+                        if(current_image.get_image_pixels()[i][j].get_pixel_value() != c) {
                             REQUIRE(false);
                         }
                     }
@@ -111,7 +111,7 @@ TEST_CASE("Data stream functionality") {
             char c;
             file.open("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/fourbyfourlabels");
 
-            for(const naivebayes::Image& current_image : classify_4_images.get_images()) {
+            for(const naivebayes::Image& current_image : classify_8_images.get_images()) {
                 file.get(c);
                 if(c == '\n') {
                     file.get(c);

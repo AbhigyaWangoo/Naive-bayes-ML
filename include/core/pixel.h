@@ -11,15 +11,15 @@ namespace naivebayes {
      */
     class Pixel {
     private:
-        const char kPixelValue;
+        char pixel_value_;
 
     public:
         /**
          * Constructor for initializing pixel with value
          *
-         * @param pixelValue to initialize kPixelValue with
+         * @param pixel_value to initialize pixel_value_ with
          */
-        Pixel(const char &pixelValue);
+        Pixel(const char &pixel_value);
         
         /**
          * Simple empty constructor
@@ -29,9 +29,9 @@ namespace naivebayes {
         /**
          * Gets Pixel's value
          * 
-         * @return kPixelValue 
+         * @return pixel_value_ 
          */
-        const char getKPixelValue() const;
+        const char get_pixel_value() const;
 
         /**
          * Determines whether the pixel's shade based on the value
@@ -39,6 +39,8 @@ namespace naivebayes {
          * @return whether the pixel is shaded or not
          */
         bool IsShaded() const;
+
+        void setPixelValue(char pixelValue);
     };
 }
 

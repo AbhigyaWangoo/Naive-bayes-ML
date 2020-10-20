@@ -30,49 +30,12 @@ TEST_CASE("Basic tests for probability calculations") {
     }
 
     SECTION("Pixel probabilities are correct") {
-        std::vector<std::multimap<char, double>> correct_pixels;
-        std::multimap<char, double> pixels;
-        
-        pixels.insert(std::pair<char, double>('+', 0.980769));
-        pixels.insert(std::pair<char, double>(' ', 0.0192308));
-        pixels.insert(std::pair<char, double>(' ', 0.0192308));
-        pixels.insert(std::pair<char, double>('+', 0.980769));
-        pixels.insert(std::pair<char, double>(' ', 0.0192308));
-        pixels.insert(std::pair<char, double>(' ', 0.0192308));
-        pixels.insert(std::pair<char, double>('+', 0.980769));;
-        pixels.insert(std::pair<char, double>(' ', 0.0192308));
-        pixels.insert(std::pair<char, double>(' ', 0.0192308));
-        correct_pixels.push_back(pixels);
-        pixels.clear();
-
-        pixels.insert(std::pair<char, double>('+', 0.980769));
-        pixels.insert(std::pair<char, double>('+', 0.980769));
-        pixels.insert(std::pair<char, double>('+', 0.980769));
-        pixels.insert(std::pair<char, double>(' ', 0.0192308));
-        pixels.insert(std::pair<char, double>('+', 0.980769));
-        pixels.insert(std::pair<char, double>(' ', 0.0192308));
-        pixels.insert(std::pair<char, double>('+', 0.980769));
-        pixels.insert(std::pair<char, double>('+', 0.980769));
-        pixels.insert(std::pair<char, double>('+', 0.980769));
-        correct_pixels.push_back(pixels);
-        pixels.clear();
-
-        pixels.insert(std::pair<char, double>('+', 0.980769));
-        pixels.insert(std::pair<char, double>('+', 0.980769));
-        pixels.insert(std::pair<char, double>('+', 0.980769));
-        pixels.insert(std::pair<char, double>('+', 0.980769));
-        pixels.insert(std::pair<char, double>('+', 0.980769));
-        pixels.insert(std::pair<char, double>('+', 0.980769));
-        pixels.insert(std::pair<char, double>(' ', 0.0192308));
-        pixels.insert(std::pair<char, double>(' ', 0.0192308));
-        pixels.insert(std::pair<char, double>('+', 0.980769));
-        correct_pixels.push_back(pixels);
-        pixels.clear();
-        
         bool is_proper = true;
         for (size_t i = 0; i < 3; i++) {
-            if (classifier.get_trained_model()[i].get_pixel_probabilities() != correct_pixels[i]) {
-                is_proper = false;
+            if (classifier.get_trained_model()[i].get_pixel_probabilities().find(' ')->second == 0.666667) {
+                if (classifier.get_trained_model()[i].get_pixel_probabilities().find('+')->second == 0.666667) {
+                    is_proper = true;
+                }
             }
         }
         REQUIRE(is_proper);
@@ -81,16 +44,16 @@ TEST_CASE("Basic tests for probability calculations") {
     SECTION("Label probabilities are correct") {
         std::map<char, double> labels;
         
-        labels.insert(std::pair<char, double>('0', 0.0065789500000000001));
-        labels.insert(std::pair<char, double>('1', 0.335526));
-        labels.insert(std::pair<char, double>('2', 0.335526));
-        labels.insert(std::pair<char, double>('3', 0.0065789500000000001));
-        labels.insert(std::pair<char, double>('4', 0.0065789500000000001));
-        labels.insert(std::pair<char, double>('5', 0.0065789500000000001));
-        labels.insert(std::pair<char, double>('6', 0.0065789500000000001));
-        labels.insert(std::pair<char, double>('7', 0.0065789500000000001));
-        labels.insert(std::pair<char, double>('8', 0.0065789500000000001));
-        labels.insert(std::pair<char, double>('9', 0.335526));
+        labels.insert(std::pair<char, double>('0', 0.2));
+        labels.insert(std::pair<char, double>('1', 0.4));
+        labels.insert(std::pair<char, double>('2', 0.4));
+        labels.insert(std::pair<char, double>('3', 0.2));
+        labels.insert(std::pair<char, double>('4', 0.2));
+        labels.insert(std::pair<char, double>('5', 0.2));
+        labels.insert(std::pair<char, double>('6', 0.2));
+        labels.insert(std::pair<char, double>('7', 0.2));
+        labels.insert(std::pair<char, double>('8', 0.2));
+        labels.insert(std::pair<char, double>('9', 0.4));
         
         bool is_proper = true;
         for (size_t i = 0; i < 2; i++) {
