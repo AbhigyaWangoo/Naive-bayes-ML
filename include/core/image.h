@@ -1,6 +1,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <fstream>
 
 #include "pixel.h"
 
@@ -22,6 +23,15 @@ namespace naivebayes {
          * Empty constructor for Image
          */
         Image();
+
+        /**
+         * Reads in an image from a file
+         * 
+         * @param ifs specifies the file to read from 
+         * @param image to read into
+         * @return the input file stream used in the function 
+         */
+        friend std::ifstream &operator>>(std::ifstream &ifs, Image &image);
         
         /**
          * Getter for assigned_class
@@ -42,7 +52,14 @@ namespace naivebayes {
          *
          * @param row to add
          */
-        void AddPixel(std::vector<Pixel> &row);
+        void AddRow(std::vector<Pixel> &row);
+
+        /**
+         * Adds Pixel to current image_pixels_ spot
+         *
+         * @param row to add
+         */
+        void SetPixel(const Pixel &pixel, const size_t x, const size_t y);
         
         /**
          * Setter for assigned_class
