@@ -36,6 +36,42 @@ TEST_CASE("Testing CLI") {
             }
         }
 
+        command = {
+                "train",
+                "/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/threebythreeimages",
+                "/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/threebythreelabels",
+                "test",
+                "/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/threebythreeimages"
+        };
+        SECTION("Create model from existing file and test it") {
+            try {
+                mainExecutor.DetermineCommand(command);
+                REQUIRE(true);
+            } catch (std::runtime_error error) {
+                std::cout << error.what();
+                REQUIRE(false);
+            }
+        }
+
+        command = {
+                "train",
+                "/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/threebythreeimages",
+                "/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/threebythreelabels",
+                "save",
+                "/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/newtestfile",
+                "test",
+                "/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/testingdata/threebythreeimages"
+        };
+        SECTION("Create model from new file and test it") {
+            try {
+                mainExecutor.DetermineCommand(command);
+                REQUIRE(true);
+            } catch (std::runtime_error error) {
+                std::cout << error.what();
+                REQUIRE(false);
+            }
+        }
+
         SECTION("Command to check case insensitivity ") {
             command = {
                     "tRAIN",

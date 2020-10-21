@@ -7,6 +7,8 @@ namespace visualizer {
 NaiveBayesApp::NaiveBayesApp()
     : sketchpad_(glm::vec2(kMargin, kMargin), kImageDimension,
                  kWindowSize - 2 * kMargin) {
+    
+    classifier.InitializeModel("/Users/abhigyawangoo/CLionProjects/Cinder/my-projects/naivebayes-AbhiWangoo/data/mnistdatavalidation/trainedmodel");
   ci::app::setWindowSize((int) kWindowSize, (int) kWindowSize);
 }
 
@@ -34,11 +36,12 @@ void NaiveBayesApp::mouseDrag(ci::app::MouseEvent event) {
 }
 
 void NaiveBayesApp::keyDown(ci::app::KeyEvent event) {
-  switch (event.getCode()) {
+    char c;
+    switch (event.getCode()) {
     case ci::app::KeyEvent::KEY_RETURN:
-      // ask your classifier to classify the image that's currently drawn on the
-      // sketchpad and update current_prediction_
-      break;
+        c = classifier.DetermineImageLabel(sketchpad_.getCurrentImage());
+          current_prediction_ = c - '0'; 
+          break;
 
     case ci::app::KeyEvent::KEY_DELETE:
       sketchpad_.Clear();

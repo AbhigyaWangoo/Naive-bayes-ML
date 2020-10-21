@@ -15,7 +15,8 @@
 #include "image_model.h"
 
 namespace naivebayes {
-    const double lapace_k = 1;
+    const double klapaceConstant = 1;
+
     /**
      * Class containing all naive bayes computational functionality
      */
@@ -23,7 +24,7 @@ namespace naivebayes {
     public:
         static int length_;
         static int width_;
-        
+
         /**
          * Determines what image the label belongs to
          * 
@@ -31,15 +32,6 @@ namespace naivebayes {
          * @return class the image belongs to
          */
         char DetermineImageLabel(const Image &image);
-        
-        /**
-         * Overloaded operator to load trained images into list of Images
-         *
-         * @param ifs specifies the inputstream to recieve the images and labels from
-         * @param classify object to load with images and labels
-         * @return the result of the overloaded stream
-         */
-        friend std::ifstream &operator>>(std::ifstream &ifs, Classifier &classify);
 
         /**
          * Initializes the trained model if it hasn't already with images_
@@ -54,7 +46,7 @@ namespace naivebayes {
          *
          * @return values in vector<Image> form
          */
-        const std::vector<Image> &get_images() const;
+        const std::vector<Image> get_images() const;
 
         /**
          * Gets values of trained model
@@ -63,10 +55,31 @@ namespace naivebayes {
          */
         const std::vector<ImageModel> &get_trained_model() const;
 
+        /**
+        * Overloaded operator to load trained images into list of Images
+        *
+        * @param ifs specifies the inputstream to recieve the images and labels from
+        * @param classify object to load with images and labels
+        * @return the result of the overloaded stream
+        */
+        friend std::ifstream &operator>>(std::ifstream &ifs, Classifier &classify);
+
     private:
         std::vector<Image> images_;
         std::vector<ImageModel> trained_model_ = {};
-        
+
+        /**
+         * Handles the end of a line while reading 
+         * 
+         * @param current_character to read into image
+         * @param image_characters_read to track the number of characters read
+         * @param current_image to read into
+         * @param current_row to act as a buffer when reading into the Classifier images vector
+         * @param images representes the model to read into
+         */
+        static void HandleLineEnd(char &current_character, size_t &image_characters_read, Image &current_image,
+                                       std::vector<Pixel> &current_row, std::vector<Image> &images);
+
         /**
          * Finds the probability that a given image is of each class
          *
@@ -74,7 +87,7 @@ namespace naivebayes {
          * @return map of each class type, and the corresponding probability the image belongs to it
          */
         std::map<char, double> FindLikelyhoodScores(const Image &image);
-        
+
         /**
          * Finds the probability of each pixel in the given image being shaded or not
          *
@@ -108,7 +121,8 @@ namespace naivebayes {
          * @param shaded represents whether we're calculating for a shaded or unshaded pixel
          * @return the probability of the pixel being shaded
          */
-        double CalculatePixelShadeProbability(const int x, const int y, const char classification, const bool shaded) const;
+        double
+        CalculatePixelShadeProbability(const int x, const int y, const char classification, const bool shaded) const;
 
         /**
          * Reads a file's information to a trained_model_

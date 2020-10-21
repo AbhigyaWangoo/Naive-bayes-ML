@@ -6,6 +6,11 @@
 #define NAIVE_BAYES_PIXEL_H
 
 namespace naivebayes {
+
+    static const char kBlank = ' ';
+    static const char kBlack = '#';
+    static const char kGrey = '+';
+
     /**
      * Pixel class represents a single pixel in an image
      */

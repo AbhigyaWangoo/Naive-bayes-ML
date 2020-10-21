@@ -9,6 +9,7 @@
 #include <fstream>
 #include <map>
 #include <core/classifier.h>
+
 namespace naivebayes {
     /**
      * Main function parser
@@ -26,7 +27,10 @@ namespace naivebayes {
          * @param argv for the arguments
          */
         void DetermineCommand(std::vector<std::string> argv);
-    };   
+
+    private:
+        void PrintSuccessRate(Classifier &classifier) const;
+    };
 }
 
 

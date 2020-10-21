@@ -5,7 +5,7 @@
 
 namespace naivebayes {
     bool Pixel::IsShaded() const {
-        return pixel_value_ == '+' || pixel_value_ == '#'; 
+        return pixel_value_ == kBlack || pixel_value_ == kGrey; 
     }
 
     Pixel::Pixel(const char &pixel_value) : pixel_value_(pixel_value) {}

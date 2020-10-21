@@ -9,30 +9,12 @@ namespace naivebayes {
 
     // Global member variables
     static const std::vector<char> kClassifications = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-
-    static const char kBlank = ' ';
-    static const char kBlack = '#';
-    static const char kGrey = '+';
-
+    
     /**
      * Class holding representation of Image
      */
     class Image {
-    public: 
-        /**
-         * Empty constructor for Image
-         */
-        Image();
-
-        /**
-         * Reads in an image from a file
-         * 
-         * @param ifs specifies the file to read from 
-         * @param image to read into
-         * @return the input file stream used in the function 
-         */
-        friend std::ifstream &operator>>(std::ifstream &ifs, Image &image);
-        
+    public:
         /**
          * Getter for assigned_class
          * 

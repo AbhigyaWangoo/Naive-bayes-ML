@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cinder/gl/gl.h"
+#include "core/classifier.h"
 
 namespace naivebayes {
 
@@ -49,7 +50,11 @@ class Sketchpad {
    */
   void Clear();
 
- private:
+    const Image &getCurrentImage() const;
+
+private:
+    naivebayes::Image current_image;
+    
   glm::vec2 top_left_corner_;
 
   size_t num_pixels_per_side_;
